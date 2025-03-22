@@ -27,7 +27,6 @@ pico_sdk_init()
 
 SET(FREERTOS_KERNEL_PATH "${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel" CACHE STRING "Course Common Lib")
 SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/config" CACHE STRING "Local Config")
-include("${FREERTOS_CONFIG_FILE_DIRECTORY}/freertos_config.cmake") 
 include("${FREERTOS_CONFIG_FILE_DIRECTORY}/FreeRTOS_Kernel_import.cmake")
 
 add_executable(${EXEC_NAME} src/${EXEC_NAME}.c)
