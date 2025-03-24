@@ -1,0 +1,27 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 19,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "blink-test",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${sourceDir}/build/blink-test",
+        "cacheVariables": {
+          "EXEC_NAME": "blink-test"
+        }
+      },
+      {
+        "name": "blink-test-2",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${sourceDir}/build/blink-test-2",
+        "cacheVariables": {
+          "EXEC_NAME": "blink-test-2"
+        }
+      }
+    ]
+  }
+  
