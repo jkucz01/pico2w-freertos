@@ -21,6 +21,14 @@
         "cacheVariables": {
           "EXEC_NAME": "blink-test-2"
         }
+      },
+      {
+        "name": "timer-printf",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${sourceDir}/build/timer-printf",
+        "cacheVariables": {
+          "EXEC_NAME": "timer-printf"
+        }
       }
     ]
   }
