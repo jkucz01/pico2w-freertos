@@ -9,6 +9,7 @@
 #include "btstack.h"
 
 static btstack_packet_callback_registration_t hci_event_callback_registration;
+int bt_init(void);
 
 static const uint8_t adv_data[] = {
     2, BLUETOOTH_DATA_TYPE_FLAGS, 0x06,
@@ -28,10 +29,9 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
             gap_local_bd_addr(local_addr);
             printf("BTstack up and running on %s.\n", bd_addr_to_str(local_addr));
             
-            gap_advertisements_set_params(0xA0, 0xA0, 0, 0, NULL, 0x07);
             gap_advertisements_set_data(sizeof(adv_data), (uint8_t*) adv_data);
             gap_advertisements_enable(1);
-            printf("Advertising as '%s'...\n", DEVICE_NAME);
+
             break;
         case HCI_EVENT_DISCONNECTION_COMPLETE:
             printf("Disconnected...\n");
@@ -48,12 +48,14 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
     }
 }
 
-void bt_task(void) {
+void bt_task(void *pvParameters) {
     int res = bt_init();
     if (res) return;
 
     hci_power_control(HCI_POWER_ON);
-    btstack_run_loop_execute();
+    while (1){
+        btstack_run_loop_execute();
+    }
 }
 
 int bt_init(void) {
@@ -63,16 +65,12 @@ int bt_init(void) {
     }
     hci_event_callback_registration.callback = &packet_handler;
     hci_add_event_handler(&hci_event_callback_registration);
-
-    l2cap_init();
-    sm_init();
-    sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
 }
 
 int main() {
     stdio_init_all();
 
-    xTaskCreate(blink_task, "BLE Task", 128, NULL, 1, NULL);
+    xTaskCreate(bt_task, "BLE Task", 128, NULL, 1, NULL);
 
     vTaskStartScheduler();
 

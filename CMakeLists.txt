@@ -23,16 +23,20 @@ add_executable(${EXEC_NAME} src/${EXEC_NAME}.c)
 target_compile_definitions(${EXEC_NAME} PRIVATE CYW43_USE_SPI=1)
 
 target_link_libraries(${EXEC_NAME} 
-    pico_stdlib 
+    pico_stdlib
+    pico_btstack_ble
     FreeRTOS-Kernel-Heap4
     pico_cyw43_arch_none
-    pico_btstack
+    pico_btstack_cyw43
 )
 
-target_include_directories(${EXEC_NAME} PRIVATE ${PICO_SDK_PATH}/lib/btstack/src)
-target_include_directories(${EXEC_NAME} PRIVATE ${FREERTOS_KERNEL_PATH}/include)
-target_include_directories(${EXEC_NAME} PRIVATE ${CONFIG_FILE_DIRECTORY})
-target_include_directories(${EXEC_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(${EXEC_NAME} PRIVATE 
+    ${FREERTOS_KERNEL_PATH}/include
+    ${CONFIG_FILE_DIRECTORY}
+    ${CMAKE_CURRENT_LIST_DIR}/src
+    ${PICO_SDK_PATH}/lib/btstack/src
+    ${PICO_SDK_PATH}/lib/btstack/platform/embedded
+)
 
 pico_add_extra_outputs(${EXEC_NAME})
 pico_enable_stdio_usb(${EXEC_NAME} 1)
