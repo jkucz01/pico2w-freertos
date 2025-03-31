@@ -14,7 +14,8 @@ set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 pico_sdk_init()
 
 SET(FREERTOS_KERNEL_PATH "${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel" CACHE STRING "Course Common Lib")
-SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/config" CACHE STRING "Local Config")
+SET(CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/config" CACHE STRING "Local Config")
+message(STATUS "CONFIG_FILE_DIRECTORY: ${CONFIG_FILE_DIRECTORY}")
 
 add_subdirectory(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/ FreeRTOS-Kernel)
 
@@ -25,10 +26,12 @@ target_link_libraries(${EXEC_NAME}
     pico_stdlib 
     FreeRTOS-Kernel-Heap4
     pico_cyw43_arch_none
+    pico_btstack
 )
 
+target_include_directories(${EXEC_NAME} PRIVATE ${PICO_SDK_PATH}/lib/btstack/src)
 target_include_directories(${EXEC_NAME} PRIVATE ${FREERTOS_KERNEL_PATH}/include)
-target_include_directories(${EXEC_NAME} PRIVATE ${FREERTOS_CONFIG_FILE_DIRECTORY})
+target_include_directories(${EXEC_NAME} PRIVATE ${CONFIG_FILE_DIRECTORY})
 target_include_directories(${EXEC_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
 pico_add_extra_outputs(${EXEC_NAME})
