@@ -20,6 +20,11 @@ message(STATUS "CONFIG_FILE_DIRECTORY: ${CONFIG_FILE_DIRECTORY}")
 add_subdirectory(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/ FreeRTOS-Kernel)
 
 add_executable(${EXEC_NAME} src/${EXEC_NAME}.c)
+
+if(EXEC_NAME STREQUAL "ble-client")
+    target_compile_definitions(${EXEC_NAME} PRIVATE RUNNING_AS_CLIENT=1)
+endif()
+
 target_compile_definitions(${EXEC_NAME} PRIVATE CYW43_USE_SPI=1)
 
 target_link_libraries(${EXEC_NAME} 
