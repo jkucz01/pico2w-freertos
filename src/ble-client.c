@@ -16,23 +16,36 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
         case BTSTACK_EVENT_STATE:
             if (btstack_event_state_get_state(packet) != HCI_STATE_WORKING) return;
 
-            gap_set_scan_parameters(0, 0x30, 0x30);
+            gap_set_scan_parameters(1, 0x30, 0x30);
             gap_start_scan();
             printf("Scanning started...\n");
             break;
         case GAP_EVENT_ADVERTISING_REPORT: 
             bd_addr_t server_addr;
             gap_event_advertising_report_get_address(packet, server_addr);
+            uint8_t addr_type = gap_event_advertising_report_get_address_type(packet);
             uint8_t adv_size = gap_event_advertising_report_get_data_length(packet);
             const uint8_t *adv_data = gap_event_advertising_report_get_data(packet);
-
-            if (adv_size >= 3 
-                && adv_data[1] == BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME
-                && strncmp((char*)&adv_data[2], "Pico-BLE 1", adv_size-2))
-            {
-                printf("Found target device: %s\n", bd_addr_to_str(server_addr));
-                gap_stop_scan();
-                gap_connect(server_addr, 0);
+            
+            for (int i = 0; i < adv_size;) {
+                uint8_t field_length = adv_data[i];
+                if (field_length == 0) break;
+                uint8_t field_type = adv_data[i + 1];
+            
+                if (field_type == BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME || field_type == BLUETOOTH_DATA_TYPE_SHORTENED_LOCAL_NAME) {
+                    char device_name[field_length];
+                    memcpy(device_name, &adv_data[i + 2], field_length - 1);
+                    device_name[field_length - 1] = '\0';
+            
+                    printf("Device name found: %s\n", device_name);
+            
+                    if (strcmp(device_name, "Pico-BLE 1") == 0) {
+                        printf("Found target device: %s\n", bd_addr_to_str(server_addr));
+                        gap_stop_scan();
+                        gap_connect(server_addr, 0);
+                    }
+                }
+                i += field_length + 1;
             }
             break;
         case HCI_EVENT_DISCONNECTION_COMPLETE:
