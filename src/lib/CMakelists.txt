@@ -2,6 +2,7 @@ add_subdirectory(Config)
 add_subdirectory(OLED)
 add_subdirectory(Fonts)
 add_subdirectory(GUI)
+add_subdirectory(OLED_Helper)
 
 add_library(Pico-OLED-1-3 INTERFACE)
 
@@ -10,6 +11,7 @@ target_link_libraries(Pico-OLED-1-3 INTERFACE
     GUI
     Fonts
     Config
+    OLED_Helper
 )
 
 target_include_directories(Pico-OLED-1-3 INTERFACE
@@ -17,4 +19,5 @@ target_include_directories(Pico-OLED-1-3 INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/GUI
     ${CMAKE_CURRENT_SOURCE_DIR}/Fonts
     ${CMAKE_CURRENT_SOURCE_DIR}/Config
+    ${CMAKE_CURRENT_SOURCE_DIR}/OLED_Helper
 )
