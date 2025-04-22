@@ -18,7 +18,7 @@ SET(CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/config" CACHE STRING "Local
 message(STATUS "CONFIG_FILE_DIRECTORY: ${CONFIG_FILE_DIRECTORY}")
 
 add_subdirectory(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/ FreeRTOS-Kernel)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/lib)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/lib/Pico-OLED-1-3)
 
 add_executable(${EXEC_NAME} src/${EXEC_NAME}.c)
 
